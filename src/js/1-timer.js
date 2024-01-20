@@ -1,7 +1,7 @@
-// import flatpickr from "flatpickr";
-// import "flatpickr/dist/flatpickr.min.css";
-// import "izitoast/dist/js/iziToast.min.js";
-// import "izitoast/dist/css/iziToast.min.css";
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
+import "izitoast/dist/js/iziToast.min.js";
+import "izitoast/dist/css/iziToast.min.css";
 
 const options = {
     enableTime: true,
@@ -24,7 +24,11 @@ const options = {
     },
 };
 
-flatpickr("#datetime-picker", options);
+const datetimePicker = flatpickr("#datetime-picker", options);
+
+document.getElementById("datetime-picker").addEventListener("click", () => {
+    datetimePicker.open();
+});
 
 function addLeadingZero(value) {
     return value < 10 ? `0${value}` : value;
@@ -45,7 +49,7 @@ function convertMs(ms) {
 }
 
 document.getElementById("start-btn").addEventListener("click", () => {
-    const selectedDate = flatpickr("#datetime-picker").selectedDates[0];
+    const selectedDate = datetimePicker.selectedDates[0];
     const currentDate = new Date();
 
     if (selectedDate < currentDate) {

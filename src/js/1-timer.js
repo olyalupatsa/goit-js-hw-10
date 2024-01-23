@@ -60,6 +60,8 @@ document.getElementById("start-btn").addEventListener("click", () => {
         return;
     }
 
+    document.getElementById("start-btn").disabled = true; 
+
     const timeDifference = selectedDate.getTime() - currentDate.getTime();
     let countdown = timeDifference;
 
@@ -71,6 +73,9 @@ document.getElementById("start-btn").addEventListener("click", () => {
                 title: 'Success',
                 message: 'Countdown completed!',
             });
+
+            document.getElementById("start-btn").disabled = false; 
+
             return;
         }
 

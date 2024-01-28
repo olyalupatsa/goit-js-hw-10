@@ -48,10 +48,10 @@ function convertMs(ms) {
     return { days, hours, minutes, seconds };
 }
 
+
 document.getElementById("start-btn").addEventListener("click", () => {
     const selectedDate = datetimePicker.selectedDates[0];
     const currentDate = new Date();
-
     if (selectedDate < currentDate) {
         iziToast.warning({
             title: 'Warning',
@@ -59,12 +59,9 @@ document.getElementById("start-btn").addEventListener("click", () => {
         });
         return;
     }
-
-    document.getElementById("start-btn").disabled = true; 
-
+    document.getElementById("start-btn").disabled = true;
     const timeDifference = selectedDate.getTime() - currentDate.getTime();
     let countdown = timeDifference;
-
     const timerInterval = setInterval(() => {
         if (countdown <= 0) {
             clearInterval(timerInterval);
@@ -73,12 +70,8 @@ document.getElementById("start-btn").addEventListener("click", () => {
                 title: 'Success',
                 message: 'Countdown completed!',
             });
-
-            document.getElementById("start-btn").disabled = false; 
-
             return;
         }
-
         updateTimerUI(convertMs(countdown));
         countdown -= 1000;
     }, 1000);

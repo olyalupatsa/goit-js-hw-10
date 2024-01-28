@@ -10,25 +10,22 @@ const options = {
     minuteIncrement: 1,
     onClose(selectedDates) {
         const selectedDate = selectedDates[0];
-
-        // Check if the selected date is in the future
         if (selectedDate < new Date()) {
             document.getElementById("start-btn").disabled = true;
             iziToast.warning({
-                title: 'Warning',
-                message: 'Please choose a date in the future',
+                title: 'Попередження',
+                message: 'Будь ласка, оберіть дату у майбутньому',
             });
         } else {
             document.getElementById("start-btn").disabled = false;
         }
     },
 };
-
 const datetimePicker = flatpickr("#datetime-picker", options);
-
 document.getElementById("datetime-picker").addEventListener("click", () => {
     datetimePicker.open();
 });
+
 
 function addLeadingZero(value) {
     return value < 10 ? `0${value}` : value;
@@ -48,10 +45,10 @@ function convertMs(ms) {
     return { days, hours, minutes, seconds };
 }
 
-
 document.getElementById("start-btn").addEventListener("click", () => {
     const selectedDate = datetimePicker.selectedDates[0];
     const currentDate = new Date();
+
     if (selectedDate < currentDate) {
         iziToast.warning({
             title: 'Warning',
@@ -59,9 +56,12 @@ document.getElementById("start-btn").addEventListener("click", () => {
         });
         return;
     }
-    document.getElementById("start-btn").disabled = true;
+
+    document.getElementById("start-btn").disabled = true; 
+
     const timeDifference = selectedDate.getTime() - currentDate.getTime();
     let countdown = timeDifference;
+
     const timerInterval = setInterval(() => {
         if (countdown <= 0) {
             clearInterval(timerInterval);
@@ -70,12 +70,18 @@ document.getElementById("start-btn").addEventListener("click", () => {
                 title: 'Success',
                 message: 'Countdown completed!',
             });
+
+            document.getElementById("start-btn").disabled = false; 
+
             return;
         }
+
         updateTimerUI(convertMs(countdown));
         countdown -= 1000;
     }, 1000);
 });
+
+
 
 function updateTimerUI({ days, hours, minutes, seconds }) {
     document.querySelector("[data-days]").textContent = addLeadingZero(days);

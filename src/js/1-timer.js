@@ -45,7 +45,7 @@ function convertMs(ms) {
     return { days, hours, minutes, seconds };
 }
 
-let timerInterval;
+let timerInterval; 
 
 document.addEventListener("DOMContentLoaded", () => {
     const startBtn = document.getElementById("start-btn");
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const timeDifference = selectedDate.getTime() - currentDate.getTime();
         let countdown = timeDifference;
 
-        const timerInterval = setInterval(() => {
+        timerInterval = setInterval(() => {
             if (countdown <= 0) {
                 clearInterval(timerInterval);
                 updateTimerUI(convertMs(0));
@@ -103,6 +103,7 @@ document.getElementById("datetime-picker").addEventListener("change", () => {
     document.getElementById("start-btn").disabled = true;
     clearInterval(timerInterval);
     updateTimerUI(convertMs(0));
+    localStorage.setItem("startButtonDisabled", "true");
 });
 
 function updateTimerUI({ days, hours, minutes, seconds }) {

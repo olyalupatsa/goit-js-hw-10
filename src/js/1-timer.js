@@ -45,33 +45,35 @@ function convertMs(ms) {
     return { days, hours, minutes, seconds };
 }
 
+let timerInterval;
+
 document.getElementById("start-btn").addEventListener("click", () => {
     const selectedDate = datetimePicker.selectedDates[0];
     const currentDate = new Date();
 
     if (selectedDate < currentDate) {
         iziToast.warning({
-            title: 'Warning',
-            message: 'Please choose a date in the future',
+            title: 'Попередження',
+            message: 'Будь ласка, оберіть дату у майбутньому',
         });
         return;
     }
 
-    document.getElementById("start-btn").disabled = true; 
+    document.getElementById("start-btn").disabled = true;
 
     const timeDifference = selectedDate.getTime() - currentDate.getTime();
     let countdown = timeDifference;
 
-    const timerInterval = setInterval(() => {
+    timerInterval = setInterval(() => {
         if (countdown <= 0) {
             clearInterval(timerInterval);
             updateTimerUI(convertMs(0));
             iziToast.success({
-                title: 'Success',
-                message: 'Countdown completed!',
+                title: 'Успіх',
+                message: 'Відлік завершено!',
             });
 
-            document.getElementById("start-btn").disabled = false; 
+            document.getElementById("start-btn").disabled = false;
 
             return;
         }
@@ -81,7 +83,11 @@ document.getElementById("start-btn").addEventListener("click", () => {
     }, 1000);
 });
 
-
+document.getElementById("datetime-picker").addEventListener("change", () => {
+    document.getElementById("start-btn").disabled = true;
+    clearInterval(timerInterval);
+    updateTimerUI(convertMs(0));
+});
 
 function updateTimerUI({ days, hours, minutes, seconds }) {
     document.querySelector("[data-days]").textContent = addLeadingZero(days);

@@ -47,40 +47,56 @@ function convertMs(ms) {
 
 let timerInterval;
 
-document.getElementById("start-btn").addEventListener("click", () => {
-    const selectedDate = datetimePicker.selectedDates[0];
-    const currentDate = new Date();
+document.addEventListener("DOMContentLoaded", () => {
+    const startBtn = document.getElementById("start-btn");
+    
+    const isButtonDisabled = localStorage.getItem("startButtonDisabled") === "true";
 
-    if (selectedDate < currentDate) {
-        iziToast.warning({
-            title: 'Попередження',
-            message: 'Будь ласка, оберіть дату у майбутньому',
-        });
-        return;
-    }
+    startBtn.disabled = isButtonDisabled;
 
-    document.getElementById("start-btn").disabled = true;
+    startBtn.addEventListener("click", () => {
+        const selectedDate = datetimePicker.selectedDates[0];
+        const currentDate = new Date();
 
-    const timeDifference = selectedDate.getTime() - currentDate.getTime();
-    let countdown = timeDifference;
-
-    timerInterval = setInterval(() => {
-        if (countdown <= 0) {
-            clearInterval(timerInterval);
-            updateTimerUI(convertMs(0));
-            iziToast.success({
-                title: 'Успіх',
-                message: 'Відлік завершено!',
+        if (selectedDate < currentDate) {
+            iziToast.warning({
+                title: 'Попередження',
+                message: 'Будь ласка, оберіть дату у майбутньому',
             });
-
-            document.getElementById("start-btn").disabled = false;
-
             return;
         }
 
-        updateTimerUI(convertMs(countdown));
-        countdown -= 1000;
-    }, 1000);
+        startBtn.disabled = true;
+
+        const timeDifference = selectedDate.getTime() - currentDate.getTime();
+        let countdown = timeDifference;
+
+        const timerInterval = setInterval(() => {
+            if (countdown <= 0) {
+                clearInterval(timerInterval);
+                updateTimerUI(convertMs(0));
+                iziToast.success({
+                    title: 'Успіх',
+                    message: 'Відлік завершено!',
+                });
+
+                localStorage.setItem("startButtonDisabled", "false");
+
+                return;
+            }
+
+            updateTimerUI(convertMs(countdown));
+            countdown -= 1000;
+        }, 1000);
+    });
+
+    document.getElementById("datetime-picker").addEventListener("change", () => {
+        startBtn.disabled = true;
+        clearInterval(timerInterval);
+        updateTimerUI(convertMs(0));
+
+        localStorage.setItem("startButtonDisabled", "true");
+    });
 });
 
 document.getElementById("datetime-picker").addEventListener("change", () => {

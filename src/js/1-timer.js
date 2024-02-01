@@ -49,10 +49,6 @@ let timerInterval;
 
 document.addEventListener("DOMContentLoaded", () => {
     const startBtn = document.getElementById("start-btn");
-    
-    const isButtonDisabled = localStorage.getItem("startButtonDisabled") === "true";
-
-    startBtn.disabled = isButtonDisabled;
 
     startBtn.addEventListener("click", () => {
         const selectedDate = datetimePicker.selectedDates[0];
@@ -80,8 +76,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     message: 'Відлік завершено!',
                 });
 
-                localStorage.setItem("startButtonDisabled", "false");
-
                 return;
             }
 
@@ -94,8 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
         startBtn.disabled = true;
         clearInterval(timerInterval);
         updateTimerUI(convertMs(0));
-
-        localStorage.setItem("startButtonDisabled", "true");
     });
 });
 
@@ -103,7 +95,6 @@ document.getElementById("datetime-picker").addEventListener("change", () => {
     document.getElementById("start-btn").disabled = true;
     clearInterval(timerInterval);
     updateTimerUI(convertMs(0));
-    localStorage.setItem("startButtonDisabled", "true");
 });
 
 function updateTimerUI({ days, hours, minutes, seconds }) {
